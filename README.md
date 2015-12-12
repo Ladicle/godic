@@ -2,6 +2,8 @@
 
 This project is command line tool for [codic](https://codic.jp/my/api_status).
 
+![sample](img/sample.png)
+
 ## Usage
 
 ### 1. Install
