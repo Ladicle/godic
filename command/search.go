@@ -61,8 +61,6 @@ func (c *SearchCommand) Run(args []string) int {
 	)
 
 	flags := flag.NewFlagSet(NAME, flag.ContinueOnError)
-	flags.BoolVar(&detailFlag, "d", false, "")
-	flags.BoolVar(&detailFlag, "detail", false, "")
 	flags.BoolVar(&helpFlag, "h", false, "")
 	flags.BoolVar(&helpFlag, "help", false, "")
 	flags.StringVar(&casingFlag, "c", "", "")
@@ -173,7 +171,6 @@ Word:
   Specify up to three words separated by spaces.
 
 Options:
-  -d --detail        Show detail translation result.(not implemented)
   -p --project ID    Specifies the project ID to be used in the translation.
   -c --casing TYPE   Valid TYPE is camel, pascal, lower_underscore, upper_underscore and hyphen.
   -h --help          Show this.
