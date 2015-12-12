@@ -1,4 +1,4 @@
-# codic
+# godic
 
 This project is command line tool for [codic](https://codic.jp/my/api_status).
 
@@ -11,7 +11,7 @@ This project is command line tool for [codic](https://codic.jp/my/api_status).
 To install, use `go get`:
 
 ```bash
-$ go get -d github.com/ladicle/codic
+$ go get -d github.com/ladicle/godic
 ```
 
 ### 2. Setup AccessToken
@@ -25,12 +25,12 @@ Get the AccessToken in the API page.
 And, save it:
 
 ```bash
-$ echo 'YOUR_ACCESS_TOKEN' > ~/.codic
+$ echo 'YOUR_ACCESS_TOKEN' > ~/.godic
 ```
 
 ## Contribution
 
-1. Fork ([https://github.com/ladicle/codic/fork](https://github.com/ladicle/codic/fork))
+1. Fork ([https://github.com/ladicle/godic/fork](https://github.com/ladicle/godic/fork))
 1. Create a feature branch
 1. Commit your changes
 1. Rebase your local changes against the master branch

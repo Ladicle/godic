@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ladicle/codic/command"
+	"github.com/ladicle/godic/command"
 	"github.com/mitchellh/cli"
 )
 

@@ -17,7 +17,7 @@ import (
 var (
 	NAME = "search"
 	HOME = os.Getenv("HOME")
-	CONF = ".codic"
+	CONF = ".godic"
 	READER_SIZE = 4096
 	MAX_WROD = 3
 	DEFAULT_CASING_FLAG = ""
@@ -207,12 +207,12 @@ func (c *SearchCommand) Synopsis() string {
 func (c *SearchCommand) Help() string {
 	helpText := `
 Usage:
-  codic search [OPTIONS] <word..>
+  godic search [OPTIONS] <word..>
 
   Japanes-English translation.
 
 Example:
-  codic search --casing pascal ユーザ削除 登録
+  godic search --casing pascal ユーザ削除 登録
 
 Word:
   Set string(Japanes) to be trancelated.

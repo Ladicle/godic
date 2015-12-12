@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ladicle/codic/command"
+	"github.com/ladicle/godic/command"
 	"github.com/mitchellh/cli"
 )
 
