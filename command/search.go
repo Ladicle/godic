@@ -1,6 +1,7 @@
 package command
 
 import (
+	"unicode/utf8"
 	"encoding/json"
 	"bufio"
 	"fmt"
@@ -51,21 +52,29 @@ type SearchCommand struct {
 	Meta
 }
 
+func maxTextWidth(results []Result) int {
+	width := 0
+	for _, w := range results {
+		count := utf8.RuneCountInString(w.Text)
+		if count > width {
+			width = count
+		}
+	}
+	return width
+}
+
 func (c *SearchCommand) Run(args []string) int {
 	// Parse subcommand flags
 	var (
 		projectFlag int
 		casingFlag string
 		helpFlag bool
-		detailFlag bool
 		words []string
 	)
 
 	flags := flag.NewFlagSet(NAME, flag.ContinueOnError)
 	flags.BoolVar(&helpFlag, "h", false, "")
 	flags.BoolVar(&helpFlag, "help", false, "")
-	flags.BoolVar(&detailFlag, "d", false, "")
-	flags.BoolVar(&detailFlag, "detail", false, "")
 	flags.StringVar(&casingFlag, "c", "", "")
 	flags.StringVar(&casingFlag, "casing", "", "")
 	flags.IntVar(&projectFlag, "p", DEFAULT_PROJECT_FLAG, "")
@@ -145,23 +154,49 @@ func (c *SearchCommand) Run(args []string) int {
 		return ExitCodeInternalError
 	}
 
-	for ri, result := range results {
-		fmt.Printf("[%d] %s\n%s\n",
-			ri,
-			result.Text,
-			result.TranslatedText)
+	// Show results
+	wordWidth := maxTextWidth(results)
+	space := wordWidth - 2
+	if space < 0 {
+		space = 0
+	}
+	fmt.Printf("TEXT%s TRANSLATE\n", strings.Repeat("　", space))
 
-		if detailFlag {
-			for wi, word := range result.Words {
-				fmt.Printf("[%d-%d] %s\n",
-					ri, wi,
-					word.Text)
-				for _, candidate := range word.Candidates {
-					fmt.Println(candidate.Text)
-				}
+	var wordMap map[string]bool = map[string]bool{}
+	for _, result := range results {
+		translate := result.TranslatedText
+		if !result.Successful {
+			translate = "FAILED"
+		}
+		wordMap[result.Text] = true
+		fmt.Printf("%s%s %s\n",
+			result.Text,
+			strings.Repeat("　", wordWidth - utf8.RuneCountInString(result.Text)),
+			translate)
+	}
+
+	fmt.Printf("\nWORD%s TRANSLATE\n", strings.Repeat("　", space))
+	for _, result := range results {
+		for _, word := range result.Words {
+			if !word.Successful || wordMap[word.Text] {
+				continue
 			}
+
+			wordMap[word.Text] = true
+			fmt.Printf("%s%s ",
+				word.Text,
+				strings.Repeat("　", wordWidth - utf8.RuneCountInString(word.Text)))
+			
+			for i, candidate := range word.Candidates {
+				if i != 0 {
+					fmt.Print(", ")
+				}
+				fmt.Print(candidate.Text)
+			}
+			fmt.Print("\n")
 		}
 	}
+	
 	return ExitCodeOK
 }
 
@@ -184,7 +219,6 @@ Word:
   Specify up to three words separated by spaces.
 
 Options:
-  -d --detail        Show detail translation result.
   -p --project ID    Specifies the project ID to be used in the translation.
   -c --casing TYPE   Valid TYPE is camel, pascal, lower_underscore, upper_underscore and hyphen.
   -h --help          Show this.
