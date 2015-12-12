@@ -57,12 +57,15 @@ func (c *SearchCommand) Run(args []string) int {
 		projectFlag int
 		casingFlag string
 		helpFlag bool
+		detailFlag bool
 		words []string
 	)
 
 	flags := flag.NewFlagSet(NAME, flag.ContinueOnError)
 	flags.BoolVar(&helpFlag, "h", false, "")
 	flags.BoolVar(&helpFlag, "help", false, "")
+	flags.BoolVar(&detailFlag, "d", false, "")
+	flags.BoolVar(&detailFlag, "detail", false, "")
 	flags.StringVar(&casingFlag, "c", "", "")
 	flags.StringVar(&casingFlag, "casing", "", "")
 	flags.IntVar(&projectFlag, "p", DEFAULT_PROJECT_FLAG, "")
@@ -142,13 +145,23 @@ func (c *SearchCommand) Run(args []string) int {
 		return ExitCodeInternalError
 	}
 
-	for i, result := range results {
+	for ri, result := range results {
 		fmt.Printf("[%d] %s\n%s\n",
-			i,
+			ri,
 			result.Text,
 			result.TranslatedText)
+
+		if detailFlag {
+			for wi, word := range result.Words {
+				fmt.Printf("[%d-%d] %s\n",
+					ri, wi,
+					word.Text)
+				for _, candidate := range word.Candidates {
+					fmt.Println(candidate.Text)
+				}
+			}
+		}
 	}
-	
 	return ExitCodeOK
 }
 
@@ -171,6 +184,7 @@ Word:
   Specify up to three words separated by spaces.
 
 Options:
+  -d --detail        Show detail translation result.
   -p --project ID    Specifies the project ID to be used in the translation.
   -c --casing TYPE   Valid TYPE is camel, pascal, lower_underscore, upper_underscore and hyphen.
   -h --help          Show this.
