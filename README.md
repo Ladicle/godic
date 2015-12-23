@@ -11,7 +11,7 @@ This project is command line tool for [codic](https://codic.jp/my/api_status).
 To install, use `go get`:
 
 ```bash
-$ go get -d github.com/ladicle/godic
+$ go get github.com/ladicle/godic
 ```
 
 ### 2. Setup AccessToken
